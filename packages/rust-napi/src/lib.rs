@@ -21,18 +21,14 @@ impl DataProcessor {
     #[napi]
     pub fn process_excel_to_json(
         &self,
-        file_buffer: napi::bindgen_prelude::Buffer,
+        file_path: String,
     ) -> napi::Result<String> {
-        // Passa os bytes puros do Node.js para o ecossistema do Rust
-        match ProcessDataUseCase::execute_excel_to_json(file_buffer.as_ref()) {
+        match ProcessDataUseCase::execute_excel_to_json(&file_path) {
             Ok(json_string) => Ok(json_string),
-            Err(e) => {
-                // Traduz o CoreError do Rust para um Erro nativo do JavaScript
-                Err(napi::Error::new(
-                    napi::Status::GenericFailure,
-                    e.to_string(),
-                ))
-            }
+            Err(e) => Err(napi::Error::new(
+                napi::Status::GenericFailure,
+                e.to_string(),
+            )),
         }
     }
 }

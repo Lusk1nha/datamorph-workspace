@@ -1,15 +1,10 @@
-use calamine::{Data, Reader, Xlsx, open_workbook_from_rs};
+use calamine::{Data, Reader, Xlsx, open_workbook};
 use serde_json::{Map, Value};
-use std::io::Cursor;
 
 use crate::domain::errors::CoreError;
 
-pub fn extract_json_from_excel_bytes(bytes: &[u8]) -> Result<String, CoreError> {
-    let cursor = Cursor::new(bytes);
-
-    // 1. O 'match' resolve o problema de inferência de tipos instantaneamente.
-    // Ele extrai o Workbook se der sucesso, ou converte para nossa String de erro se falhar.
-    let mut workbook: Xlsx<_> = match open_workbook_from_rs(cursor) {
+pub fn extract_json_from_excel_file(file_path: &str) -> Result<String, CoreError> {
+    let mut workbook: Xlsx<_> = match open_workbook(file_path) {
         Ok(wb) => wb,
         Err(e) => return Err(CoreError::ExcelParsingError(e.to_string())),
     };
@@ -17,7 +12,6 @@ pub fn extract_json_from_excel_bytes(bytes: &[u8]) -> Result<String, CoreError> 
     let sheet_names = workbook.sheet_names().to_owned();
     let first_sheet = sheet_names.first().ok_or(CoreError::EmptySheet)?;
 
-    // 2. Usamos o match aqui também por segurança contra mudanças da API
     let range = match workbook.worksheet_range(first_sheet) {
         Ok(r) => r,
         Err(e) => return Err(CoreError::ExcelParsingError(e.to_string())),

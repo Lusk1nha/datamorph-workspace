@@ -3,5 +3,5 @@
 export declare class DataProcessor {
   constructor()
   healthCheck(): string
-  processExcelToJson(fileBuffer: Buffer): string
+  processExcelToJson(filePath: string): string
 }
