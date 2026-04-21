@@ -30,14 +30,12 @@ export function DataMorphPage() {
 
   const previewFormat = result
     ? {
-        // Agora sim: pegamos as chaves do primeiro objeto da lista
-        headers: result.preview?.length > 0 ? Object.keys(result.preview[0]) : [],
+        headers:
+          result.preview?.length > 0 ? Object.keys(result.preview[0]) : [],
         rows: result.preview as Record<string, any>[],
         totalRows: result.totalRows,
       }
     : null
-
-  console.log({ result, previewFormat })
 
   return (
     <main className="min-h-screen bg-background p-6 font-mono text-foreground selection:bg-primary/20 md:p-12">
