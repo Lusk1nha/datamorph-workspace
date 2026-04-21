@@ -1,0 +1,8 @@
+[package]
+name = "datamorph-napi"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+# 'cdylib' diz ao Rust para compilar isso como uma biblioteca dinâmica C
+crate-type = ["cdylib"]
