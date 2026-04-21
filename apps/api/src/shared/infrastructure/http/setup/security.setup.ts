@@ -11,7 +11,21 @@ import { Environment } from '@/shared/infrastructure/env/env-schema'
 export const securitySetup = fp(async (server) => {
   const isDev = env.NODE_ENV === Environment.Development
 
-  await server.register(helmet, { global: true })
+  await server.register(helmet, {
+    global: true,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+
+        styleSrc: ["'self'", "'unsafe-inline'"],
+
+        imgSrc: ["'self'", 'data:', 'validator.swagger.io'],
+      },
+    },
+  })
+
   await server.register(compress, { global: true })
   await server.register(rateLimit, { max: 100, timeWindow: '1 minute' })
   await server.register(cors, {

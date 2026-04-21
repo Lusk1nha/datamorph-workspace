@@ -16,7 +16,7 @@ export class DataProcessingController {
     const data = await request.file()
 
     if (!data) {
-      throw new AppError('Nenhum arquivo enviado.', 400)
+      throw new AppError('No file provided', 400)
     }
 
     const tempFilePath = path.join(
@@ -30,15 +30,13 @@ export class DataProcessingController {
       const parsedData = await this.processExcelUseCase.execute(tempFilePath)
 
       return reply.status(200).send({
-        message: 'Planilha processada com sucesso!',
+        message: 'Excel file processed successfully!',
         totalRows: parsedData.length,
-        preview: parsedData.slice(0, 5),
+        preview: parsedData,
       })
     } finally {
       await unlink(tempFilePath).catch((err) =>
-        request.log.error(
-          `Falha ao deletar arquivo temporário: ${err.message}`,
-        ),
+        request.log.error(`Failed to delete temporary file: ${err.message}`),
       )
     }
   }

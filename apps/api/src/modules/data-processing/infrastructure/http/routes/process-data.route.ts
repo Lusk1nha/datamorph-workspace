@@ -15,7 +15,6 @@ export const dataProcessingRoutes: FastifyPluginAsyncZod = async (server) => {
       schema: {
         tags: ['Data Processing'],
         summary: 'Process large Excel files via Rust Engine',
-        // A documentação multipart no Swagger exige consumes
         consumes: ['multipart/form-data'],
         response: {
           200: createApiResponseSchema(
