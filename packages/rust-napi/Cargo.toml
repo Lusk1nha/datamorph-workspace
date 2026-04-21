@@ -4,10 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [lib]
-# 'cdylib' diz ao Rust para compilar isso como uma biblioteca dinâmica C
 crate-type = ["cdylib"]
 
 [dependencies]
 napi = { version = "3.8.5", features = ["napi4"] }
 napi-derive = "3.5.4"
+rust-core = { path = "../rust-core" }
 
+
+[build-dependencies]
+napi-build = "2.3.1"

@@ -1,4 +1,4 @@
-// import { DataProcessor } from "@datamorph/napi";
+import { DataProcessor } from "@datamorph/napi";
 
 type CheckHealthResponse = {
   apiStatus: string;
@@ -8,12 +8,12 @@ type CheckHealthResponse = {
 
 export class CheckHealthUseCase {
   async execute(): Promise<CheckHealthResponse> {
-    // const processor = new DataProcessor();
-    // const rustMessage = processor.healthCheck();
+    const processor = new DataProcessor();
+    const rustMessage = processor.healthCheck();
 
     return {
       apiStatus: "ok",
-      rustEngineStatus: "ok",
+      rustEngineStatus: rustMessage,
       timestamp: new Date().toISOString(),
     };
   }

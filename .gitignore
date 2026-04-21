@@ -154,3 +154,7 @@ target
 
 .env
 .env.*
+
+# Added by cargo
+
+/target
