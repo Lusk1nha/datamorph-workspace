@@ -1,45 +1,43 @@
 import fastify from "fastify";
-
 import {
-  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
   type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 
-import { fastifySwagger } from "@fastify/swagger";
-import scalarAPIReference from "@scalar/fastify-api-reference";
+// --- Setups & Hooks ---
+import { getLoggerConfig } from "@/shared/infrastructure/http/setup/logger.setup";
+import { securitySetup } from "@/shared/infrastructure/http/setup/security.setup";
+import { swaggerSetup } from "@/shared/infrastructure/http/setup/swagger.setup";
+import { errorHandlerSetup } from "@/shared/infrastructure/http/setup/error-handler.setup";
+import { transformResponseHook } from "@/shared/infrastructure/http/hooks/transform-response.hook";
+
+// --- Rotas ---
+import { healthRoutes } from "@/modules/health/infrastructure/http/routes/health.route";
+
+const logger = getLoggerConfig();
 
 const server = fastify({
-  logger: {
-    enabled: process.env.NODE_ENV === "development",
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  },
+  logger,
+  bodyLimit: 10485760,
+  disableRequestLogging: true,
 }).withTypeProvider<ZodTypeProvider>();
 
-if (process.env.NODE_ENV === "development") {
-  server.register(fastifySwagger, {
-    openapi: {
-      info: {
-        title: "Desafio Node.js",
-        version: "1.0.0",
-      },
-    },
-    transform: jsonSchemaTransform,
-  });
-
-  server.register(scalarAPIReference, {
-    routePrefix: "/docs",
-  });
-}
-
+// 1. Compiladores Zod
 server.setSerializerCompiler(serializerCompiler);
 server.setValidatorCompiler(validatorCompiler);
+
+// 2. Lifecycle Hooks
+server.addHook("preSerialization", transformResponseHook);
+
+// 3. Plugins de Infraestrutura
+server.register(securitySetup);
+server.register(swaggerSetup);
+
+// 4. Tratamento de Erros Global
+errorHandlerSetup(server);
+
+// 5. Módulos de Domínio (Rotas)
+server.register(healthRoutes, { prefix: "/api/v1" });
 
 export { server };
