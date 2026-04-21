@@ -1,5 +1,5 @@
 {
-  "name": "@datamorph/web",
+  "name": "web",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -7,11 +7,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.2.4",
+    "@datamorph/ui": "workspace:*",
     "@tanstack/react-query": "^5.99.2",
     "axios": "^1.15.2",
     "react": "^19.2.5",
@@ -20,6 +22,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.2.4",
     "@eslint/js": "^9.39.4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
