@@ -1,5 +1,6 @@
-import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query'
-import { getErrorMessage } from './api-errors'
+import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query"
+import { getErrorMessage } from "./api-errors"
+import { toast } from "sonner"
 
 const handleGlobalError = (error: unknown) => {
   const message = getErrorMessage(error)

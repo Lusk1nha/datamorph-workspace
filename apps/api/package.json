@@ -1,5 +1,5 @@
 {
-  "name": "@datamorph/api",
+  "name": "api",
   "version": "1.0.0",
   "private": true,
   "description": "Fastify API Adapter & Gateway",
